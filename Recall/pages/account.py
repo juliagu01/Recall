@@ -6,7 +6,7 @@ import reflex as rx
 
 
 @template(route="/account", title="Account")
-def settings() -> rx.Component:
+def account() -> rx.Component:
     """The Account page.
 
     Returns:

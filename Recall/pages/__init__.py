@@ -1,3 +1,3 @@
-from .habits import dashboard
+from .habits import habits
 from .index import index
-from .account import settings
+from .account import account

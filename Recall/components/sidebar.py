@@ -14,10 +14,18 @@ def sidebar_header() -> rx.Component:
     return rx.hstack(
         # The logo.
         rx.image(src="/reflex_black.svg", height="2em"),
-        rx.spacer(),
+        rx.link(
+            rx.button(
+                rx.icon("github"),
+                color_scheme="gray",
+                variant="soft",
+            ),
+            href="https://github.com/reflex-dev/reflex",
+        ),
+        
         align="center",
-        width="100%",
-        border_bottom=styles.border,
+        width="340%",
+        
         padding_x="1em",
         padding_y="2em",
     )
@@ -29,20 +37,8 @@ def sidebar_footer() -> rx.Component:
     Returns:
         The sidebar footer component.
     """
-    return rx.hstack(
-        rx.spacer(),
-        rx.link(
-            rx.button(
-                rx.icon("github"),
-                color_scheme="gray",
-                variant="soft",
-            ),
-            href="https://github.com/juliagu01/Recall",
-        ),
-        width="100%",
-        border_top=styles.border,
-        padding="1em",
-    )
+    return
+    
 
 
 def sidebar_item(text: str, url: str) -> rx.Component:
@@ -64,6 +60,7 @@ def sidebar_item(text: str, url: str) -> rx.Component:
         rx.hstack(
             rx.text(
                 text,
+                align="center"
             ),
             bg=rx.cond(
                 active,
@@ -80,13 +77,14 @@ def sidebar_item(text: str, url: str) -> rx.Component:
                 styles.accent_text_color,
                 styles.text_color,
             ),
-            align="center",
             border_radius=styles.border_radius,
-            width="100%",
+            # width="100%",
             padding="1em",
+            
         ),
         href=url,
-        width="100%",
+        # width="100%",
+        
     )
 
 
@@ -99,30 +97,32 @@ def sidebar() -> rx.Component:
     # Get all the decorated pages and add them to the sidebar.
     from reflex.page import get_decorated_pages
 
+    custom_order = {"Calendar": 1, "Habits": 2, "Account": 3}
     return rx.box(
         rx.hstack(
             sidebar_header(),
+            rx.spacer(),
             rx.hstack(
                 *[
                     sidebar_item(
                         text=page.get("title", page["route"].strip("/").capitalize()),
                         url=page["route"],
                     )
-                    for page in get_decorated_pages()
+                    for page in sorted(get_decorated_pages(), key=lambda x: custom_order.get(x.get("title", x["route"].strip("/").capitalize()), float('inf')))
                 ],
                 width="100%",
                 overflow_y="auto",
-                align_items="flex-start",
+                align_items="end",
+                # align_items="flex-start",
                 padding="1em",
             ),
-            rx.spacer(),
-            sidebar_footer(),
+            # rx.spacer(),
             height="100dvh",
         ),
         display=["none", "none", "block"],
-        min_height=styles.sidebar_width,
+        height="85px",
         width="100%",
         position="sticky",
-        top="0px",
-        border_right=styles.border,
+        border_bottom=styles.border,
+        
     )

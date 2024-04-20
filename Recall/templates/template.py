@@ -51,11 +51,8 @@ def menu_button() -> rx.Component:
             rx.menu.content(
                 *[
                     menu_item_link(page["title"], page["route"])
-                    for page in get_decorated_pages()
-                ],
-                rx.menu.separator(),
-                menu_item_link("About", "https://github.com/reflex-dev"),
-                menu_item_link("Contact", "mailto:founders@=reflex.dev"),
+                    for page in sorted(get_decorated_pages(), key=lambda x: (x['index']))
+                ]
             ),
         ),
         position="fixed",
@@ -76,6 +73,7 @@ class ThemeState(rx.State):
 def template(
     route: str | None = None,
     title: str | None = None,
+    # index: int = 0,
     description: str | None = None,
     meta: str | None = None,
     script_tags: list[rx.Component] | None = None,
