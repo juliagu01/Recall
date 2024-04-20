@@ -101,7 +101,7 @@ def sidebar() -> rx.Component:
     return rx.box(
         rx.hstack(
             sidebar_header(),
-            rx.spacer(),
+            # rx.spacer(),
             rx.hstack(
                 *[
                     sidebar_item(
@@ -117,7 +117,6 @@ def sidebar() -> rx.Component:
                 padding="1em",
             ),
             # rx.spacer(),
-            height="100dvh",
         ),
         display=["none", "none", "block"],
         height="85px",
