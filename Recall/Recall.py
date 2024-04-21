@@ -2,7 +2,6 @@
 
 # Import all the pages.
 from Recall.pages import *
-from Recall.backend.app import main
 
 import reflex as rx
 
@@ -15,4 +14,3 @@ class State(rx.State):
 app = rx.App(stylesheets=[
         "/styles.css",  # This path is relative to assets/
     ],)
-main()
