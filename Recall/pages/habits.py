@@ -4,7 +4,10 @@ from Recall.templates import template
 
 import reflex as rx
 
-habits_data: list[dict[str, str]] = [
+class ToggleEditViewHabits(rx.State):
+    view: str = "Edit"
+
+    habits_data: list[dict[str,str]] = [
     {
         "name": "Target run",
         "labels": "Items?|Spending?",
@@ -16,12 +19,8 @@ habits_data: list[dict[str, str]] = [
     {
         "name": "Vacuum",
         "labels": "",
-    },
+    }
 ]
-
-
-class ToggleEditViewHabits(rx.State):
-    view: str = "Edit"
 
     def toggle(self):
         if (self.view == "Edit"):
@@ -51,37 +50,38 @@ def habits() -> rx.Component:
                 ),
                 width="100%",
                 justify="between",
-            ),
+            ), rx.spacer(my="3em"),
             rx.foreach(
-                habits_data,
+                ToggleEditViewHabits.habits_data,
                 lambda habit: rx.vstack(
                     rx.heading(
                         habit["name"],
                         size="5", 
                         font_family="Lexend",
+                        margin_bottom="0.5em",
+                        align="left",
+                    ), 
+                    rx.foreach(
+                        habit["labels"].split("|"),
+                        lambda item: rx.text(item),
+                        size="4", 
+                        font_family="Lexend",
+                        my="0.5em",
+                        align="left",
+        
                     ),
-                    rx.text(
-                        habit["labels"],
-                    ),
-#                    rx.heading(
-#                        habit["name"],
-#                        size="5", 
-#                        font_family="Lexend",
-#                    ),
-#                    rx.foreach(
-#                        habit["labels"].split("|").append("Notes:"),
-#                        lambda label: rx.text(
-#                            label
-#                        ),
-#                    ),
+                    # rx.text(
+                    #     habit["labels"].split("|"),
+                    #     my="5px",
+                    #     align="start",
+                    # ),
+                    # *[
+                    # rx.text(label, size="5", font_family="Lexend", my="5px", align="left") for label in habit["labels"].split("|")
+                    # ],
+                    rx.text("Notes", margin_bottom="2em"),
                 ),
             ),
-            rx.text(
-                "You can edit this page in ",
-                rx.code("{your_app}/pages/account.py"),
-            ), 
             width="40vw",
-            align="center",
         ),
         width="100vw",
         justify="center",
