@@ -7,19 +7,40 @@ import reflex as rx
 class ToggleEditViewHabits(rx.State):
     view: str = "Edit"
 
-    habits_data: list[dict[str,str]] = [
+    habits_data: list[dict[str,list[str]]] = [
     {
-        "name": "Target run",
-        "labels": "Items?|Spending?",
+        "name": [
+            "Target run"
+        ],
+        "labels": [
+            "Items?",
+            "Spending?",
+        ],
     },
     {
-        "name": "Sleep quality",
-        "labels": "Rating (1-5):",
+        "name": [
+            "Sleep quality",
+        ],
+        "labels": [
+            "Rating (1-5):",
+        ],
     },
     {
-        "name": "Vacuum",
-        "labels": "",
-    }
+        "name": [
+            "Vacuum",
+        ],
+        "labels": [
+        ],
+    },
+    {
+        "name": [
+            "Breakfast",
+        ],
+        "labels": [
+            "Where?",
+            "What?",
+        ],
+    },
 ]
 
     def toggle(self):
@@ -43,6 +64,7 @@ def habits() -> rx.Component:
                     "Habits", 
                     size="6", 
                     font_family="Lexend",
+                    margin_bottom="0.5em",
                 ),
                 rx.button(
                     ToggleEditViewHabits.view,
@@ -55,20 +77,19 @@ def habits() -> rx.Component:
                 ToggleEditViewHabits.habits_data,
                 lambda habit: rx.vstack(
                     rx.heading(
-                        habit["name"],
+                        habit["name"][0],
                         size="5", 
                         font_family="Lexend",
                         margin_bottom="0.5em",
                         align="left",
                     ), 
                     rx.foreach(
-                        habit["labels"].split("|"),
-                        lambda item: rx.text(item),
+                        habit["labels"],
+                        lambda label: rx.text(label),
                         size="4", 
                         font_family="Lexend",
                         my="0.5em",
                         align="left",
-        
                     ),
                     # rx.text(
                     #     habit["labels"].split("|"),
@@ -78,7 +99,7 @@ def habits() -> rx.Component:
                     # *[
                     # rx.text(label, size="5", font_family="Lexend", my="5px", align="left") for label in habit["labels"].split("|")
                     # ],
-                    rx.text("Notes", margin_bottom="2em"),
+                    rx.text("Notes:", margin_bottom="2em"),
                 ),
             ),
             width="40vw",
