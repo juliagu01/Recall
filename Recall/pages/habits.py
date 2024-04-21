@@ -8,7 +8,6 @@ import reflex as rx
 class ToggleEditViewHabits(rx.State):
    isEdit: bool = True
 
-
    habits_data: list[dict[str,list[str]]] = [
    {
        "name": [
@@ -17,7 +16,13 @@ class ToggleEditViewHabits(rx.State):
        "labels": [
            "Items?",
            "Spending?",
-       ],
+           "Notes",
+       ], 
+       "responses": [
+           "Allergy medicine, Reese's cups", 
+           "$10.83",
+           "\u00a0"
+       ]
    },
    {
        "name": [
@@ -25,14 +30,23 @@ class ToggleEditViewHabits(rx.State):
        ],
        "labels": [
            "Rating (1-5):",
-       ],
+           "Notes",
+       ], 
+       "responses": [
+           "5", 
+           "\u00a0"
+       ]
    },
    {
        "name": [
            "Vacuum",
        ],
        "labels": [
+           "Notes",
        ],
+       "responses": [
+           "\u00a0"
+       ]
    },
    {
        "name": [
@@ -41,7 +55,13 @@ class ToggleEditViewHabits(rx.State):
        "labels": [
            "Where?",
            "What?",
+           "Notes",
        ],
+       "responses": [
+           "\u00a0", 
+           "\u00a0",
+           "\u00a0"
+       ]
    },
 ]
           
@@ -52,16 +72,17 @@ class ToggleEditViewHabits(rx.State):
        print(self.habits_data)
   
    def addHabit(self):
-       self.habits_data.append({"name": ["Enter Habit Name"], "labels": []})
+       self.habits_data.append({"name": ["Enter Habit Name"], "labels": ["Notes"], "responses": [""]})
        # print(self.habits_data)
 
-
-   def handleInputChange(self, habit, value):
+    # for changing habits
+   def handleChange(self, habit, value):
     #    print("habit", habit, value, "value")
         for i in range(len(self.habits_data)):
             if(self.habits_data[i]["name"] == habit["name"]):
                 self.habits_data[i]["name"][0] = value # Update the first element in the list
-          
+    
+    # handle submit of habits page
    def handle_submit(self, form_data:list):
        self.isEdit = not(self.isEdit)
        keys = list(form_data.keys())
@@ -69,6 +90,21 @@ class ToggleEditViewHabits(rx.State):
            self.habits_data[i]["name"][0] = keys[i]
        print(self.habits_data)
 
+    #submitting calendar
+   def handle_submit_calendar(self, form_data:list):
+       keys = list(form_data.keys()) 
+       #9 responses in form data, but 
+       for i in range(len(form_data)):
+           for j in range(len(self.habits_data[i]["responses"])):
+                self.habits_data[i]["responses"][j] = keys[i]
+       print(self.habits_data)
+
+    #for adding a response
+   def handleInputChange(self, habit, response, value):
+        for i in range(len(self.habits_data)):
+            if(self.habits_data[i]["name"] == habit["name"] and response in self.habits_data[i]["responses"]):
+                find_val = self.habits_data[i]["responses"].index(response)
+                self.habits_data[i]["responses"][find_val] = value 
 
 
 
@@ -120,7 +156,6 @@ def habits() -> rx.Component:
                                    my="0.5em",
                                    align="left",
                                ),
-                               rx.text("Notes:", margin_bottom="2em"),
                            )
                        ), 
                        rx.button(
@@ -136,7 +171,7 @@ def habits() -> rx.Component:
                                 rx.input(
                                     value=habit["name"][0],
                                     name=habit["name"][0],
-                                    on_change=lambda value: ToggleEditViewHabits.handleInputChange(habit, value)
+                                    on_change=lambda value: ToggleEditViewHabits.handleChange(habit, value)
                                 ),
                                 rx.foreach(
                                     habit["labels"],
@@ -146,7 +181,7 @@ def habits() -> rx.Component:
                                     my="0.5em",
                                     align="left",
                                 ),
-                                rx.text("Notes:", margin_bottom="2em"),
+                                
                             )
                         ), 
                             rx.button(

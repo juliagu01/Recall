@@ -11,6 +11,8 @@ from custom_components.reflex_calendar import calendar
 
 from datetime import datetime
 
+from Recall.pages.habits import ToggleEditViewHabits
+
 now = datetime.now()
 
 # Get the weekday, month, day, and year from the datetime object
@@ -69,15 +71,20 @@ class Foo(rx.State):
         if len(self.logs) > 15:
             self.logs.pop(0)
 
-class ToggleEditView(rx.State):
-    view: str = "Edit" #if it shows edit that means it is in view mode
-
+class ViewState(rx.State):
+    edit: bool = True
 
     def toggle(self):
-        if(self.view == "Edit"):
-            self.view = "Save"
-        else:
-            self.view = "Edit"
+       self.edit = not(self.edit)
+
+    
+          
+    # def handle_submit(self, form_data:list):
+    #    self.isEdit = not(self.isEdit)
+    #    keys = list(form_data.keys())
+    #    for i in range(len(form_data)):
+    #        self.habits_data[i]["name"][0] = keys[i]
+    #    print(self.habits_data)
 
     
 
@@ -108,23 +115,115 @@ def demo():
             # on_view_change=Foo.view_change_handler,
         ), align="start"),
         # Foo.selected_date
-        rx.hstack(
-            rx.text("Notes for " + print_date(Foo.selected_date),
-                    padding_left="10em",
-                    padding_right="2.5em",
-                    font_family="Lexend",
-                    size="8"),
-            rx.button(
-            ToggleEditView.view,
-            color_scheme= ThemeState.gray_color,
-            on_click=ToggleEditView.toggle,
-        ), 
+        rx.vstack(
+            rx.hstack(
+                rx.text("Notes for " + print_date(Foo.selected_date),
+                        font_family="Lexend",
+                        size="8"),
+                ),rx.spacer(margin_top="10px"),
+
+                # rx.cond(ViewState.edit,
+                    # rx.button(
+                    # "Edit",
+                    # color_scheme= ThemeState.gray_color,
+                    # on_click=ViewState.toggle,
+                    # ),
+                    # rx.button(
+                    # "Save",
+                    # color_scheme= ThemeState.gray_color,
+                    # on_click=ViewState.toggle,
+                    # )
+                # )
+                # ,
+                rx.cond(ViewState.edit,
+                    # true
+                    rx.vstack(
+                       rx.foreach(
+                           ToggleEditViewHabits.habits_data,
+                           lambda habit: rx.vstack(
+                               rx.heading(
+                                   habit["name"][0],
+                                   size="6",
+                                   font_family="Lexend",
+                                   margin_bottom="0.5em",
+                                   align="left",
+                               ), rx.hstack(
+                               rx.vstack(
+                                rx.foreach(
+                                    habit["labels"],
+                                    lambda label: rx.text(label),
+                                    size="4",
+                                    font_family="Lexend",
+                                    my="0.5em",
+                                    align="left",
+                               )), rx.vstack(
+                                rx.foreach(
+                                   habit["responses"],
+                                   lambda response: rx.text(response, color_scheme=ThemeState.accent_color),
+                                   size="4",
+                                   font_family="Lexend",
+                                   my="0.5em",
+                                   align="left",
+                               )))
+                           )
+                       ), rx.button(
+                                "Edit",
+                                color_scheme= ThemeState.gray_color,
+                                on_click=ViewState.toggle,
+                                ))
+                    ,
+
+                    #false
+                    rx.vstack(
+                       rx.foreach(
+                           ToggleEditViewHabits.habits_data,
+                           lambda habit: rx.vstack(
+                               rx.heading(
+                                   habit["name"][0],
+                                   size="6",
+                                   font_family="Lexend",
+                                   margin_bottom="0.5em",
+                                   align="left",
+                               ), rx.hstack(
+                               rx.vstack(
+                                rx.foreach(
+                                    habit["labels"],
+                                    lambda label: rx.text(label),
+                                    size="5",
+                                    font_family="Lexend",
+                                    my="4em",
+                                    align="left",
+                               )), rx.vstack(
+                                rx.foreach(
+                                   habit["responses"],
+                                   lambda response: 
+                                   rx.input( value=response,
+                                    name=response,
+                                    on_change=lambda value: ToggleEditViewHabits.handleInputChange(habit, response, value)),
+                                   size="4",
+                                   font_family="Lexend",
+                                   my="0.5em",
+                                   align="left",
+                               ))),
+                           )
+                       ), rx.button(
+                    "Save",
+                    color_scheme= ThemeState.gray_color,
+                    on_click=ViewState.toggle,
+                    ))
+                    ,
+                ),
+            
+            padding_left="10em",
+            padding_right="2.5em",
+            
+                
             
         ),
         
-        width="100vw",
-        
-    )
+    ), 
+
+
 
 
 
@@ -137,5 +236,6 @@ def mycalendar() -> rx.Component:
             # spacing="7",
             width="100vw",
             height="70vh",
+            margin_bottom = "15em", 
         )
        
