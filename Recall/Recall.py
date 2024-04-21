@@ -2,6 +2,7 @@
 
 # Import all the pages.
 from Recall.pages import *
+from Recall.backend.app import main
 
 import reflex as rx
 
@@ -12,4 +13,4 @@ class State(rx.State):
 
 # Create the app.
 app = rx.App()
-
+main()
