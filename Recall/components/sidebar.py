@@ -13,7 +13,7 @@ def sidebar_header() -> rx.Component:
     """
     return rx.hstack(
         # The logo.
-        rx.image(src="/reflex_black.svg", height="2em"),
+        rx.image(src="/favicon.ico", height="2em"),
         rx.link(
             rx.button(
                 rx.icon("github"),

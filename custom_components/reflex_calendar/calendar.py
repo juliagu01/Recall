@@ -41,7 +41,7 @@ class Calendar(rx.Component):
     allow_partial_range: rx.Var[bool]
 
     # The calendar type.
-    calendar_type: rx.Var[LiteralCalendarType]
+    calendar_type: rx.Var[str]
 
     # The default value of the component. (need serialization to new Date())
     default_value: rx.Var[str]

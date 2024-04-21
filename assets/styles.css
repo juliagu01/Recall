@@ -1,0 +1,13 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Lexend&display=swap');
+
+/* Set font family for text */
+body {
+  font-family: 'Lexend', sans-serif;
+}
+
+/* Additional styling */
+.container {
+  margin: 50px auto;
+  text-align: center;
+}

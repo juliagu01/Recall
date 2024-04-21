@@ -12,5 +12,7 @@ class State(rx.State):
 
 
 # Create the app.
-app = rx.App()
+app = rx.App(stylesheets=[
+        "/styles.css",  # This path is relative to assets/
+    ],)
 main()

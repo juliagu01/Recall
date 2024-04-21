@@ -5,6 +5,8 @@ from Recall.templates import template
 import reflex as rx
 
 
+
+
 @template(route="/habits", title="Habits")
 def habits() -> rx.Component:
     """The Habits page.
@@ -14,11 +16,10 @@ def habits() -> rx.Component:
     """
     return rx.vstack(
         rx.heading("Habits", size="8"),
-        rx.text("Welcome to Reflex!"),
         rx.text(
             "You can edit this page in ",
             rx.code("{your_app}/pages/account.py"),
         ), 
-        width="100%",
+        width="100vw",
         align="center",
     )
