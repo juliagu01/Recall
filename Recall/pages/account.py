@@ -9,8 +9,8 @@ from datetime import datetime
 now = datetime.now()
 
 class accountForm(rx.State):
-    submitForm: bool = True
-    form_data: dict = {}
+    submitForm: bool = False
+    form_data: dict = {"Name": "Joe Bruin"}
     date: str = str(now.strftime('%A'))[0:3] + " "  + \
             str(now.strftime('%B'))[0:3] + " "  + \
             str(now.strftime('%d'))+ " "  + \
@@ -20,7 +20,6 @@ class accountForm(rx.State):
         """Handle the form submit."""
         self.toggle()
         self.form_data = form_data
-        
         
 
     def toggle(self):
@@ -97,29 +96,32 @@ def account() -> rx.Component:
         The UI for the Account page.
     """
     
-    return (rx.vstack(
-        header(),
+    return (header(),
+        rx.hstack((rx.vstack(
+        
         rx.cond(
             accountForm.submitForm,
-            (rx.form(rx.button("Save", type="submit"),rx.spacer(),
+            (rx.form(rx.button("Save", type="submit", margin_y="2.5em"),
             rx.hstack(
-            rx.text("Name:", size = "6", font_family="Lexend"),
+            rx.text("Name:", size = "6", font_family="Lexend", margin_bottom="2.5em"),
             rx.input(placeholder="Joe Bruin", name = "Name"),
             ),
-            rx.spacer(),
             rx.text("Member since: " + accountForm.date, size = "4", font_family="Lexend"), 
             on_submit=accountForm.handle_submit,
             reset_on_submission=False,)), #true
 
-            rx.vstack(rx.button("Edit", on_click=accountForm.toggle),
+            rx.vstack(rx.button("Edit", on_click=accountForm.toggle, margin_y="2.5em"),
                       rx.hstack(
-            rx.text("Name: "+accountForm.form_data["Name"].to_string()[1:-1], size = "6", font_family="Lexend"),
+            rx.text("Name: "+accountForm.form_data["Name"].to_string()[1:-1], size = "6", font_family="Lexend", margin_bottom="2.5em"),
             
             ),
-            rx.spacer(),
             rx.text("Member since: " + accountForm.date, size = "4", font_family="Lexend"),
             ) # false
         )
         ), 
         # rx.text(accountForm.form_data.to_string()),
-        )
+        ), 
+        ), 
+        rx.image(src="/favicon.ico", height="22em", margin_top="-8em", 
+                    margin_bottom = "8em", margin_left="55em")
+                    )
